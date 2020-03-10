@@ -86,10 +86,10 @@ def convert_text_to_ids(tokenizer, text, max_len=100):
 def seq_padding(tokenizer, X):
 	pad_id = tokenizer.convert_tokens_to_ids("[PAD]")
 	if len(X) <= 1:
-		return X
+		return torch.tensor(X, dtype=torch.long)
 	L = [len(x) for x in X]
 	ML = max(L)
-	X = torch.Tensor([x + [pad_id] * (ML - len(x)) if len(x) < ML else x for x in X])
+	X = torch.tensor([x + [pad_id] * (ML - len(x)) if len(x) < ML else x for x in X], dtype=torch.long)
 	#X.requires_grad = True
 	return X
 
@@ -107,7 +107,7 @@ def train(model, iterator, optimizer, criterion, device, clip):
 		# 标签形状为 (batch_size, 1) 
 		label = label.unsqueeze(1)
 		# 需要 LongTensor
-		input_ids, token_type_ids, label = input_ids.long(), token_type_ids.long(), label.long()
+		# input_ids, token_type_ids, label = input_ids.long(), token_type_ids.long(), label.long()
 		# 梯度清零
 		optimizer.zero_grad()
 		# 迁移到GPU
@@ -149,7 +149,7 @@ def evaluate(model, iterator, criterion, device):
 			# 标签形状为 (batch_size, 1) 
 			label = label.unsqueeze(1)
 			# 需要 LongTensor
-			input_ids, token_type_ids, label = input_ids.long(), token_type_ids.long(), label.long()
+			# input_ids, token_type_ids, label = input_ids.long(), token_type_ids.long(), label.long()
 			# 迁移到GPU
 			input_ids, token_type_ids, label = input_ids.to(device), token_type_ids.to(device), label.to(device)
 			output = model(input_ids=input_ids, token_type_ids=token_type_ids, labels=label)
