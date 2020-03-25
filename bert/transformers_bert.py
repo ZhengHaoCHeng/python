@@ -46,7 +46,7 @@ data_path = base_path + "/data/sentiment/"
 sentiment_train_set = SentimentDataset(data_path + "sentiment.train.data")
 sentiment_train_loader = DataLoader(sentiment_train_set, batch_size=batch_size, shuffle=True, num_workers=2)
 
-sentiment_valid_set = SentimentDataset(data_path + "sentiment.train.data")
+sentiment_valid_set = SentimentDataset(data_path + "sentiment.valid.data")
 sentiment_valid_loader = DataLoader(sentiment_valid_set, batch_size=batch_size, shuffle=False, num_workers=2)
 
 # 加载模型
