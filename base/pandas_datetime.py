@@ -29,12 +29,12 @@ delta = 7                                             # 处理的时间范围
 day_num = (df['Date'].max() - df['Date'].min()).days  # 数据集的时间跨度
 loop_num = math.ceil(day_num / delta)                 # 计算循环次数
 start = datetime.datetime.strptime(str(df['Date'][0]), '%Y-%m-%d %H:%M:%S')
-end = start + datetime.timedelta(days=7)
+end = start + datetime.timedelta(days=delta)
 for _ in range(loop_num):
 	df_period = df[start: end]
 	# print('处理%s至%s' % (start, end))
 	start = end
-	end += datetime.timedelta(days=7)
+	end += datetime.timedelta(days=delta)
 
 
 df = pd.DataFrame(

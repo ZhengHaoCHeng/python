@@ -29,7 +29,7 @@ hidden_dropout_prob = 0.5
 num_labels = 2
 learning_rate = 1e-5
 weight_decay = 1e-2
-epochs = 2
+epochs = 5
 max_len = 100
 batch_size = 16
 class_num = 2
@@ -90,10 +90,9 @@ def seq_padding(tokenizer, X):
 	L = [len(x) for x in X]
 	ML = max(L)
 	X = torch.tensor([x + [pad_id] * (ML - len(x)) if len(x) < ML else x for x in X], dtype=torch.long)
-	#X.requires_grad = True
 	return X
 
-def train(model, iterator, optimizer, criterion, device, clip):
+def train(model, iterator, optimizer, criterion, device):
 	model.to(device)
 	model.train()
 	epoch_loss = 0
@@ -122,8 +121,6 @@ def train(model, iterator, optimizer, criterion, device, clip):
 		loss = output[0]
 		# 计算acc
 		acc = ((y_pred_label == label.view(-1)).sum()).item()
-		# 梯度裁剪
-		#torch.nn.utils.clip_grad_norm_(model.parameters(), clip)
 		# 反向传播
 		loss.backward()
 		optimizer.step()
@@ -161,12 +158,17 @@ def evaluate(model, iterator, criterion, device):
 	return epoch_loss / len(iterator), epoch_acc / len(iterator.dataset.dataset)
 
 for i in range(epochs):
-	train_loss, train_acc = train(model, sentiment_train_loader, optimizer, criterion, device, 1)
+	train_loss, train_acc = train(model, sentiment_train_loader, optimizer, criterion, device)
 	valid_loss, valid_acc = evaluate(model, sentiment_valid_loader, criterion, device)
 	print("\n")
 	print("train loss: ", train_loss, "\t", "train acc:", train_acc)
 	print("valid loss: ", valid_loss, "\t", "valid acc:", valid_acc, end="\n\n")
 
 # 保存
-model.save_pretrained("./")
-tokenizer.save_pretrained("./")
+import os
+saved_model = "./saved_model"
+saved_tokenizer = "./saved_tokenizer"
+os.makedirs(saved_model)
+os.makedirs(saved_tokenizer)
+model.save_pretrained(saved_model)
+tokenizer.save_pretrained(saved_tokenizer)
