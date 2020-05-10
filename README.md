@@ -4,5 +4,5 @@
 ## 文件说明
 1. bert - bert的一些下游任务及其代码  
 2. base - 一些Python技巧、代码或者数据处理的一些方法 
-3. pytorch - 暂无  
+3. pytorch - 一些模型的PyTorch实现和相关学习代码
 4. machine_learning - 一些机器学习相关的代码
